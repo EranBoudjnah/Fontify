@@ -1,0 +1,30 @@
+.fontify-facebook {
+    color: #999;
+    font-size: 18px;
+    width: 36px;
+    height: 36px;
+    line-height: 36px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.__fb-dark-mode .fontify-facebook {
+    color: #BBB;
+}
+
+.fontify-facebook:hover {
+    color: #666;
+}
+
+.__fb-dark-mode .fontify-facebook:hover {
+    color: white;
+}
+
+.fontify-linkedin-font-selector-container {
+    width: -webkit-fill-available;
+}
+
+.fontify-facebook-font-selector {
+    width: -webkit-fill-available;
+    line-height: 36px;
+}
