@@ -1,6 +1,6 @@
 {
     "name": "Fontify",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "manifest_version": 3,
     "description": "Add style to your social network posts.",
     "icons": {
@@ -16,12 +16,22 @@
         "service_worker": "lib/background.js"
     },
     "permissions": ["tabs", "scripting"],
-    "host_permissions": ["*://*.linkedin.com/*", "*://*.facebook.com/*"],
+    "host_permissions": ["https://*.linkedin.com/*", "https://linkedin.com/*", "https://*.facebook.com/*", "https://facebook.com/*", "https://*.twitter.com/*", "https://twitter.com/*"],
     "content_scripts": [
         {
-            "matches": ["<all_urls>"],
+            "matches": ["https://*.linkedin.com/*", "https://linkedin.com/*"],
             "js": ["lib/jquery-3.6.4.min.js"],
-            "css" : ["css/fontify.css"]
+            "css" : ["css/fontify-linkedin.css"]
+        },
+        {
+            "matches": ["https://*.facebook.com/*", "https://facebook.com/*"],
+            "js": ["lib/jquery-3.6.4.min.js"],
+            "css" : ["css/fontify-facebook.css"]
+        },
+        {
+            "matches": ["https://*.twitter.com/*", "https://twitter.com/*"],
+            "js": ["lib/jquery-3.6.4.min.js"],
+            "css" : ["css/fontify-twitter.css"]
         }
     ]
 }

@@ -1,0 +1,18 @@
+.fontify-twitter {
+    color: #1D9BF0;
+    min-width: 36px !important;
+    min-height: 36px !important;
+    line-height: 36px !important;
+    margin-top: 0px !important;
+    cursor: pointer;
+    border-radius: 50%;
+}
+
+.fontify-twitter DIV {
+    text-align: center;
+    min-width: 36px;
+}
+
+.fontify-twitter:hover {
+    background-color: #1D9CF01A;
+}
