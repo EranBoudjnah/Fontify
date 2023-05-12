@@ -235,7 +235,7 @@
                     }
                     const editableDiv = $('.public-DraftEditor-content');
                     const finalText = editableDiv.text();
-                    typeText(editableDiv, finalText);
+                    this.typeText(editableDiv, finalText);
                     $('.public-DraftEditor-content').filter('[contenteditable="true"]').click();
                 }
             });    
