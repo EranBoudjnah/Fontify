@@ -1,5 +1,6 @@
 (() => {
-    chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
+    const browserObject = typeof browser !== "undefined" ? browser : chrome;
+    browserObject.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         if (msg === 'ping') sendResponse(true);
     });
 

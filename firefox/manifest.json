@@ -1,0 +1,38 @@
+{
+    "name": "Fontify",
+    "version": "0.0.4",
+    "manifest_version": 2,
+    "description": "Add style to your social network posts.",
+    "icons": {
+        "16": "icons/fontify_16x16.png",
+        "32": "icons/fontify_32x32.png",
+        "48": "icons/fontify_48x48.png",
+        "128": "icons/fontify_128x128.png"
+    },
+    "browser_action": {
+        "default_popup": "popup/popup.html"
+    },
+    "permissions": [
+        "tabs",
+        "https://*.linkedin.com/*", "https://linkedin.com/*",
+        "https://*.facebook.com/*", "https://facebook.com/*",
+        "https://*.twitter.com/*", "https://twitter.com/*"
+    ],
+    "content_scripts": [
+        {
+            "matches": ["https://*.linkedin.com/*", "https://linkedin.com/*"],
+            "js": ["lib/jquery-3.6.4.min.js", "lib/fontify.js"],
+            "css" : ["css/fontify-linkedin.css"]
+        },
+        {
+            "matches": ["https://*.facebook.com/*", "https://facebook.com/*"],
+            "js": ["lib/jquery-3.6.4.min.js", "lib/fontify.js"],
+            "css" : ["css/fontify-facebook.css"]
+        },
+        {
+            "matches": ["https://*.twitter.com/*", "https://twitter.com/*"],
+            "js": ["lib/jquery-3.6.4.min.js", "lib/fontify.js"],
+            "css" : ["css/fontify-twitter.css"]
+        }
+    ]
+}
