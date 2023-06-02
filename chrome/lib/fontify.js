@@ -103,6 +103,10 @@
                 }
             });
         }
+
+        notifyNoSelection() {
+            alert('No text is selected. Select text to apply the selected style to.');
+        }
     }
 
     class LinkedInHook extends Hook {
@@ -123,6 +127,7 @@
         }
 
         injectInterface() {
+            const self = this;
             this.toolbar.find('div.share-creation-state__msg-wrapper').before('<div class="fontify-linkedin">\
 <span tabindex="-1" id="styled282" class="artdeco-hoverable-trigger artdeco-hoverable-trigger--content-placed-top ember-view">\
 <button title="Change Style" aria-label="Change Style" aria-expanded="false" id="styled283" class="artdeco-button artdeco-button--circle artdeco-button--muted artdeco-button--2 artdeco-button--tertiary ember-view" type="button">\
@@ -139,10 +144,14 @@
                 if ($(selection.focusNode.parentNode).closest('.ql-editor').length !== 0) {
                     const selectedFont = $('#fontify-linkedin-font-selector').val();
                     const selectionRange = selection.getRangeAt(0);
-                    if (selectedFont !== '') {
-                        replaceContents(selectionRange, fonts[selectedFont]);
+                    if (selectionRange && !selectionRange.collapsed) {
+                        if (selectedFont !== '') {
+                            replaceContents(selectionRange, fonts[selectedFont]);
+                        } else {
+                            replaceContents(selectionRange, false);
+                        }
                     } else {
-                        replaceContents(selectionRange, false);
+                        self.notifyNoSelection();
                     }
                 }
             });    
@@ -180,13 +189,15 @@
             const self = this;
             $('.fontify-facebook').click(function() {
                 const selectionRange = self.selectionRange;
-                if (selectionRange) {
+                if (selectionRange && !selectionRange.collapsed) {
                     const selectedFont = $('#fontify-facebook-font-selector').val();
                     if (selectedFont !== '') {
                         replaceContents(selectionRange, fonts[selectedFont]);
                     } else {
                         replaceContents(selectionRange, false);
                     }
+                } else {
+                    self.notifyNoSelection();
                 }
             });
             $('#fontify-facebook-font-selector').on('click', function(event) {
@@ -223,11 +234,12 @@
 </div>');
 
             const self = this;
-            $('.fontify-twitter').addClass(this.toolbar.first().attr('class'));
-            $('.fontify-twitter').first().addClass(this.toolbar.first().first().attr('class'));
-            $('.fontify-twitter').click(function() {
+            const fontifyTwitter = $('.fontify-twitter');
+            fontifyTwitter.addClass(this.toolbar.first().attr('class'));
+            fontifyTwitter.first().addClass(this.toolbar.first().first().attr('class'));
+            fontifyTwitter.click(function() {
                 const selectionRange = self.selectionRange;
-                if (selectionRange) {
+                if (selectionRange && !selectionRange.collapsed) {
                     const selectedFont = $('#fontify-twitter-font-selector').val();
                     if (selectedFont !== '') {
                         self.selectionRange = replaceContents(selectionRange, fonts[selectedFont]);
@@ -236,15 +248,22 @@
                     }
                     const editableDiv = $('.public-DraftEditor-content');
                     const finalText = editableDiv.text();
-                    this.typeText(editableDiv, finalText);
+                    self.typeText(editableDiv, finalText);
                     $('.public-DraftEditor-content').filter('[contenteditable="true"]').click();
+                } else {
+                    self.notifyNoSelection();
                 }
             });    
         }
 
         typeText(editableDiv, text) {
             const editorElement = editableDiv[0].childNodes[0].childNodes[0].childNodes[0];
-            editorElement.childNodes[0].childNodes[0].textContent = text;
+            const editorContent = editorElement.childNodes[0].childNodes[0];
+            if (editorContent) {
+                editorContent.textContent = text;
+            } else {
+                this.notifyNoSelection();
+            }
             const event = new Event('input', { bubbles: true });
             editorElement.dispatchEvent(event);
             return;
