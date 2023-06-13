@@ -5,6 +5,7 @@ Fontify is a 𝐟𝐫𝐞𝐞 browser extension that enhances the post editors i
 [![Chrome](assets/chrome.png "Chrome")](https://chrome.google.com/webstore/detail/fontify/dgoaelolmehccnegjlhmklglgmnennai)
 [![Edge](assets/edge.png "Edge")](https://microsoftedge.microsoft.com/addons/detail/fontify/pmocofckdndbfabkocnjglgnddiginmm)
 [![Firefox](assets/firefox.png "Firefox")](https://addons.mozilla.org/en-GB/firefox/addon/fontify/)
+[![Opera](assets/opera.png "Opera")](https://addons.opera.com/en-gb/extensions/details/fontify/)
 
 Pull requests are welcome.
 
