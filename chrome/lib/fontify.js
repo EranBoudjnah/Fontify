@@ -119,16 +119,15 @@
         }
 
         initialize() {
-            const interop_outlet=document.querySelectorAll('#interop-outlet')[0];
-            if(interop_outlet && interop_outlet.shadowRoot && $.fn){
+            const interop_outlet = document.querySelectorAll('#interop-outlet')[0];
+            if (interop_outlet && interop_outlet.shadowRoot && $.fn) {
                 this._shadowRoot = interop_outlet.shadowRoot;
                 this.toolbar = $(this._shadowRoot.querySelector('.share-creation-state__additional-toolbar'));
             }
         }
 
         isInjected() {
-            if (!this.toolbar) return;
-            return this.toolbar.find('div.fontify-linkedin').length != 0;
+            return this.toolbar && this.toolbar.find('div.fontify-linkedin').length != 0;
         }
 
         injectInterface() {
