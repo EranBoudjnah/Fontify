@@ -119,14 +119,19 @@
         }
 
         initialize() {
-            this.toolbar = $('.share-creation-state__additional-toolbar');
+            const interop_outlet = document.querySelectorAll('#interop-outlet')[0];
+            if (interop_outlet && interop_outlet.shadowRoot && $.fn) {
+                this._shadowRoot = interop_outlet.shadowRoot;
+                this.toolbar = $(this._shadowRoot.querySelector('.share-creation-state__additional-toolbar'));
+            }
         }
 
         isInjected() {
-            return this.toolbar.find('div.fontify-linkedin').length != 0;
+            return this.toolbar && this.toolbar.find('div.fontify-linkedin').length != 0;
         }
 
         injectInterface() {
+            if (!this.toolbar) return;
             const self = this;
             this.toolbar.find('div.share-creation-state__msg-wrapper').before('<div class="fontify-linkedin">\
 <span tabindex="-1" id="styled282" class="artdeco-hoverable-trigger artdeco-hoverable-trigger--content-placed-top ember-view">\
@@ -139,10 +144,10 @@
 <select id="fontify-linkedin-font-selector">' + this.fontsOptions() + '</select>\
 </div>');
 
-            $('#styled283').click(function() {
-                const selection = window.getSelection();
+            $(this.toolbar.find('#styled283')).click(function () {
+                const selection = self._shadowRoot.getSelection();
                 if ($(selection.focusNode.parentNode).closest('.ql-editor').length !== 0) {
-                    const selectedFont = $('#fontify-linkedin-font-selector').val();
+                    const selectedFont = self.toolbar.find('#fontify-linkedin-font-selector').val();
                     const selectionRange = selection.getRangeAt(0);
                     if (selectionRange && !selectionRange.collapsed) {
                         if (selectedFont !== '') {
