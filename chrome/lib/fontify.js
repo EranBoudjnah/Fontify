@@ -119,47 +119,65 @@
         }
 
         initialize() {
-            const interop_outlet = document.querySelectorAll('#interop-outlet')[0];
-            if (interop_outlet && interop_outlet.shadowRoot && $.fn) {
-                this._shadowRoot = interop_outlet.shadowRoot;
-                this.toolbar = $(this._shadowRoot.querySelector('.share-creation-state__additional-toolbar'));
-            }
+            // Not implemented.
         }
 
         isInjected() {
-            return this.toolbar && this.toolbar.find('div.fontify-linkedin').length != 0;
+            // Not implemented.
         }
 
         injectInterface() {
-            if (!this.toolbar) return;
             const self = this;
-            this.toolbar.find('div.share-creation-state__msg-wrapper').before('<div class="fontify-linkedin">\
-<span tabindex="-1" id="styled282" class="artdeco-hoverable-trigger artdeco-hoverable-trigger--content-placed-top ember-view">\
-<button title="Change Style" aria-label="Change Style" aria-expanded="false" id="styled283" class="artdeco-button artdeco-button--circle artdeco-button--muted artdeco-button--2 artdeco-button--tertiary ember-view" type="button">\
-<li-icon aria-hidden="true" type="fontify-icon" class="artdeco-button__icon">𝓢</li-icon>\
-</button>\
-</span>\
-</div>\
-<div class="fontify-linkedin-font-selector-container">\
-<select id="fontify-linkedin-font-selector">' + this.fontsOptions() + '</select>\
-</div>');
+            waitForElement("#interop-outlet").then(interopOutlet => {
+                const artdecoModalOutlet = interopOutlet.shadowRoot.getElementById('artdeco-modal-outlet');
+                const popUpObserver = new MutationObserver(function (mutations, observer) {
+                    const parentContainer = document.getElementById('interop-outlet').shadowRoot;
+                    const popupContainer = parentContainer.getElementById('artdeco-modal-outlet');
+                    if (popupContainer.childNodes.length > 0) {
+                        const toolbar = $(parentContainer.querySelector('.share-creation-state__additional-toolbar'));
+                        
+                        // If already rendered, do nothing
+                        if(toolbar.find('div.fontify-linkedin').length != 0) return;
 
-            $(this.toolbar.find('#styled283')).click(function () {
-                const selection = self._shadowRoot.getSelection();
-                if ($(selection.focusNode.parentNode).closest('.ql-editor').length !== 0) {
-                    const selectedFont = self.toolbar.find('#fontify-linkedin-font-selector').val();
-                    const selectionRange = selection.getRangeAt(0);
-                    if (selectionRange && !selectionRange.collapsed) {
-                        if (selectedFont !== '') {
-                            replaceContents(selectionRange, fonts[selectedFont]);
-                        } else {
-                            replaceContents(selectionRange, false);
-                        }
-                    } else {
-                        self.notifyNoSelection();
+                        // Add extension HTML
+                        toolbar
+                            .find('div.share-creation-state__msg-wrapper')
+                            .before('<div class="fontify-linkedin">\
+                                <span tabindex="-1" id="styled282" class="artdeco-hoverable-trigger artdeco-hoverable-trigger--content-placed-top ember-view">\
+                                <button title="Change Style" aria-label="Change Style" aria-expanded="false" id="styled283" class="artdeco-button artdeco-button--circle artdeco-button--muted artdeco-button--2 artdeco-button--tertiary ember-view" type="button">\
+                                <li-icon aria-hidden="true" type="fontify-icon" class="artdeco-button__icon">𝓢</li-icon>\
+                                </button>\
+                                </span>\
+                                </div>\
+                                <div class="fontify-linkedin-font-selector-container">\
+                                <select id="fontify-linkedin-font-selector">' + self.fontsOptions() + '</select>\
+                                </div>');
+
+                        // Attach event handlers
+                        $(toolbar.find('#styled283')).click(function () {
+                            const selection = parentContainer.getSelection();
+                            if ($(selection.focusNode.parentNode).closest('.ql-editor').length !== 0) {
+                                const selectedFont = toolbar.find('#fontify-linkedin-font-selector').val();
+                                const selectionRange = selection.getRangeAt(0);
+                                if (selectionRange && !selectionRange.collapsed) {
+                                    if (selectedFont !== '') {
+                                        replaceContents(selectionRange, fonts[selectedFont]);
+                                    } else {
+                                        replaceContents(selectionRange, false);
+                                    }
+                                } else {
+                                    self.notifyNoSelection();
+                                }
+                            }
+                        });
                     }
-                }
-            });    
+                });
+
+                popUpObserver.observe(artdecoModalOutlet, {
+                    childList: true,
+                    subtree: false
+                });
+            });
         }
     }
 
@@ -276,7 +294,6 @@
     }
 
     const hooks = [
-        new LinkedInHook(),
         new FacebookHook(),
         new TwitterHook()
     ];
@@ -291,6 +308,11 @@
             }
         });
     });
+
+    const linkedinHook = new LinkedInHook();
+    if (linkedinHook.isApplicable()) {
+        linkedinHook.injectInterface();
+    }
 
     observer.observe(document, {
         subtree: true,
@@ -375,5 +397,32 @@
         }
         traverse(commonAncestor);
         return nodes;
+    }
+
+    /**
+     * 
+     * @param {*} selector 
+     * @returns {Promise<HTMLElement>}
+     */
+    function waitForElement(selector) {
+        return new Promise(resolve => {
+            const el = document.querySelector(selector);
+            if (el) {
+                resolve(el);
+            }
+
+            const observer = new MutationObserver(mutations => {
+                const wait_el = document.querySelector(selector)
+                if (wait_el) {
+                    observer.disconnect();
+                    resolve(wait_el);
+                }
+            });
+
+            observer.observe(document.body, {
+                childList: true,
+                subtree: true
+            });
+        });
     }
 })();
