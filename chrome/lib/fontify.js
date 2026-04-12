@@ -4,7 +4,7 @@
         if (msg === 'ping') sendResponse(true);
     });
 
-    MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
+    const MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
 
     class StyledFont {
         constructor(name, upperCaseStart, lowerCaseStart, numericStart, exceptions) {
@@ -18,7 +18,7 @@
         convertText(text) {
             const self = this;
             function convertCharacter(char) {
-                var conversionDelta;
+                let conversionDelta;
                 if (/[A-Z]/.test(char)) {
                     conversionDelta = self.upperCaseStart.codePointAt(0) - "A".codePointAt(0);
                 } else if (/[a-z]/.test(char)) {
@@ -29,12 +29,12 @@
                 return String.fromCodePoint(char.codePointAt(0) + conversionDelta);
             }
 
-            var result = text;
+            let result = text;
             for (const [key, value] of Object.entries(self.exceptions)) {
                 const regex = new RegExp("[" + key + "]", "g");
                 result = result.replace(regex, value);
             }
-            return result.replace(/[A-Za-z0-9]/g, convertCharacter);;
+            return result.replace(/[A-Za-z0-9]/g, convertCharacter);
         }
 
         resetConversionDelta(character) {
@@ -76,8 +76,8 @@
 
     class Hook {
         fontsOptions() {
-            var options = ['<option value="">Normal</option>'];
-            for (var i = 0; i < fonts.length; i++) {
+            let options = ['<option value="">Normal</option>'];
+            for (let i = 0; i < fonts.length; i++) {
                 const font = fonts[i];
                 options.push('<option value="' + i + '">' + font.convertText(font.name) + '</option>');
             }
@@ -183,14 +183,14 @@
 
     class FacebookHook extends Hook {
         isApplicable() {
-            return (location.hostname.endsWith('.facebook.com') || location.hostname === 'facebook.com')
+            return (location.hostname.endsWith('.facebook.com') || location.hostname === 'facebook.com');
         }
 
         initialize() {
-            this.trackSelectionRange((parentNode) => { return parentNode.className != 'fontify-facebook' && $(parentNode).closest('[contenteditable="true"]').length !== 0 });
+            this.trackSelectionRange((parentNode) => { return parentNode.className !== 'fontify-facebook' && $(parentNode).closest('[contenteditable="true"]').length !== 0; });
 
             const emojiHook = $("body").find("[aria-label='Emoji']");
-            if (emojiHook.length != 0) {
+            if (emojiHook.length !== 0) {
                 this.toolbar = emojiHook.parent().parent().parent().parent();
             } else {
                 this.toolbar = undefined;
@@ -199,7 +199,7 @@
 
         isInjected() {
             if (!this.toolbar) return;
-            return this.toolbar.parent().find('div.fontify-facebook').length != 0;
+            return this.toolbar.parent().find('div.fontify-facebook').length !== 0;
         }
 
         injectInterface() {
@@ -235,7 +235,7 @@
         }
 
         initialize() {
-            this.trackSelectionRange((parentNode) => { return parentNode.className != 'fontify-twitter' && $(parentNode).closest('[contenteditable="true"]').length !== 0 });
+            this.trackSelectionRange((parentNode) => { return parentNode.className !== 'fontify-twitter' && $(parentNode).closest('[contenteditable="true"]').length !== 0; });
 
             this.locationButton = $('[aria-label="Tag Location"]');
             if (this.locationButton && this.locationButton.parent()) {
@@ -244,7 +244,7 @@
         }
 
         isInjected() {
-            return this.toolbar && this.toolbar.find('div.fontify-twitter').length != 0;
+            return this.toolbar && this.toolbar.find('div.fontify-twitter').length !== 0;
         }
 
         injectInterface() {
@@ -276,7 +276,7 @@
                 } else {
                     self.notifyNoSelection();
                 }
-            });    
+            });
         }
 
         typeText(editableDiv, text) {
@@ -289,8 +289,7 @@
             }
             const event = new Event('input', { bubbles: true });
             editorElement.dispatchEvent(event);
-            return;
-        }    
+        }
     }
 
     const hooks = [
@@ -298,7 +297,7 @@
         new TwitterHook()
     ];
 
-    const observer = new MutationObserver(function(mutations, observer) {
+    const observer = new MutationObserver(function() {
         hooks.forEach(hook => {
             if (hook.isApplicable()) {
                 hook.initialize();
@@ -326,7 +325,7 @@
         const endOffset = selectionRange.endOffset;
         const startParent = startContainer.parentNode;
         const endParent = endContainer.parentNode;
-        var endOffsetDifference = 0;
+        let endOffsetDifference = 0;
 
         if (startParent === endParent) {
             endOffsetDifference = replaceNodeContents(startContainer, startOffset, endOffset, font);
@@ -351,10 +350,10 @@
 
     function replaceNodeContents(container, startOffset, endOffset, font) {
         const text = container.textContent;
-        var textBeforeSelection = text.slice(0, startOffset);
-        var selectedText = text.slice(startOffset, endOffset);
-        var textAfterSelection = text.slice(endOffset);
-        var newText;
+        const textBeforeSelection = text.slice(0, startOffset);
+        const selectedText = text.slice(startOffset, endOffset);
+        const textAfterSelection = text.slice(endOffset);
+        let newText;
         if (font) {
             newText = font.convertText(resetText(selectedText));
         } else {
@@ -366,7 +365,7 @@
 
     function resetText(text) {
         function resetCharacter(character) {
-            var conversionDelta = 0;
+            let conversionDelta = 0;
             fonts.every(font => {
                 conversionDelta = font.resetConversionDelta(character);
                 return conversionDelta === 0;
@@ -380,13 +379,13 @@
         if (!commonAncestor) {
             return [];
         }
-        var nodes = [];
-        var foundNode1 = false;
-        var foundNode2 = false;
+        const nodes = [];
+        let foundNode1 = false;
+        let foundNode2 = false;
         function traverse(node) {
-            if (node == node1) {
+            if (node === node1) {
                 foundNode1 = true;
-            } else if (node == node2) {
+            } else if (node === node2) {
                 foundNode2 = true;
             } else if (foundNode1 && !foundNode2) {
                 nodes.push(node);
