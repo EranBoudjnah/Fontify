@@ -136,10 +136,9 @@
                     if (popupContainer.childNodes.length > 0) {
                         const toolbar = $(parentContainer.querySelector('.share-creation-state__additional-toolbar'));
                         
-                        // If already rendered, do nothing
-                        if(toolbar.find('div.fontify-linkedin').length != 0) return;
+                        const alreadyRendered = toolbar.find('div.fontify-linkedin').length != 0;
+                        if (alreadyRendered) return;
 
-                        // Add extension HTML
                         toolbar
                             .find('div.share-creation-state__msg-wrapper')
                             .before('<div class="fontify-linkedin">\
@@ -153,7 +152,6 @@
                                 <select id="fontify-linkedin-font-selector">' + self.fontsOptions() + '</select>\
                                 </div>');
 
-                        // Attach event handlers
                         $(toolbar.find('#styled283')).click(function () {
                             const selection = parentContainer.getSelection();
                             if ($(selection.focusNode.parentNode).closest('.ql-editor').length !== 0) {
