@@ -13,6 +13,6 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '24.14.1'
+          node-version: '23'
       - name: Run ESLint
-        run: npx eslint@10.2.0 "chrome/lib/*.js" --ignore-pattern "**/jquery*.js" --config .eslintrc.json
+        run: npx eslint@10.2.0 "chrome/lib/*.js"
