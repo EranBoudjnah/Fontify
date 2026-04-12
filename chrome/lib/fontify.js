@@ -113,7 +113,7 @@
         isApplicable() {
             try {
                 return (location.hostname.endsWith('.linkedin.com') || location.hostname === 'linkedin.com');
-            } catch (exception) {
+            } catch {
                 return false;
             }
         }
@@ -130,7 +130,7 @@
             const self = this;
             waitForElement("#interop-outlet").then(interopOutlet => {
                 const artdecoModalOutlet = interopOutlet.shadowRoot.getElementById('artdeco-modal-outlet');
-                const popUpObserver = new MutationObserver(function (mutations, observer) {
+                const popUpObserver = new MutationObserver(function () {
                     const parentContainer = document.getElementById('interop-outlet').shadowRoot;
                     const popupContainer = parentContainer.getElementById('artdeco-modal-outlet');
                     if (popupContainer.childNodes.length > 0) {
@@ -408,7 +408,7 @@
                 resolve(el);
             }
 
-            const observer = new MutationObserver(mutations => {
+            const observer = new MutationObserver(() => {
                 const wait_el = document.querySelector(selector)
                 if (wait_el) {
                     observer.disconnect();
