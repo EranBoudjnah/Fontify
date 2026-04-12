@@ -1,0 +1,18 @@
+name: Lint
+
+on:
+  pull_request:
+    branches: [ "main", "master" ]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Run ESLint
+        run: npx eslint@8.57.0 "chrome/lib/*.js" --ignore-pattern "**/jquery*.js" --config .eslintrc.json
