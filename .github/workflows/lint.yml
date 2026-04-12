@@ -15,4 +15,4 @@ jobs:
         with:
           node-version: '20'
       - name: Run ESLint
-        run: npx eslint@8.57.0 "chrome/lib/*.js" --ignore-pattern "**/jquery*.js" --config .eslintrc.json
+        run: npx eslint@10.2.0 "chrome/lib/*.js" --ignore-pattern "**/jquery*.js" --config .eslintrc.json
